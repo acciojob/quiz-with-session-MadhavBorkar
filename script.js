@@ -1,4 +1,40 @@
 //your JS code here.
+// Store DOM references
+const questionsElement = document.getElementById("questions");
+const submitButton = document.getElementById("submit");
+const scoreElement = document.getElementById("score");
+
+// Load saved answers from sessionStorage
+let userAnswers = JSON.parse(sessionStorage.getItem("progress")) || {};
+
+// Restore score from localStorage (if it exists)
+const savedScore = localStorage.getItem("score");
+if (savedScore !== null) {
+  scoreElement.textContent = `Your score is ${savedScore} out of 5.`;
+}
+
+// Listen for answer selection (event delegation)
+questionsElement.addEventListener("change", (event) => {
+  if (event.target.type === "radio") {
+    const questionIndex = event.target.name.split("-")[1];
+    userAnswers[questionIndex] = event.target.value;
+    sessionStorage.setItem("progress", JSON.stringify(userAnswers));
+  }
+});
+
+// Handle quiz submission
+submitButton.addEventListener("click", () => {
+  let score = 0;
+
+  Object.keys(userAnswers).forEach((index) => {
+    if (userAnswers[index] === questions[index].answer) {
+      score++;
+    }
+  });
+
+  scoreElement.textContent = `Your score is ${score} out of 5.`;
+  localStorage.setItem("score", score);
+});
 
 // Do not change code below this line
 // This code will just display the questions to the screen
